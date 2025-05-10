@@ -1,0 +1,383 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.ttbp-wrap *:not(i) {
+  font-family: "Inter", sans-serif;
+}
+
+:root {
+  --primary: #3e32f4;
+  --grey: #dcdadd;
+  --black: #121212;
+  --success: #28A745;
+  --danger: #DC3545;
+}
+
+.ttbp_section_heading {
+  font-size: 16px;
+  color: var(--black);
+  font-weight: 600;
+  line-height: 1.5em;
+}
+
+.ttbp_modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+}
+
+.ttbp_modal.active {
+  display: flex;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.ttbp_add_rule {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #fff;
+  padding: 20px;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  width: 450px;
+  position: relative;
+}
+
+.ttbp_label {
+  font-size: 14px;
+  color: var(--black);
+  font-weight: 600;
+  line-height: 1.5em;
+  display: block;
+  margin: 0 0 10px 0;
+}
+
+.ttbp_form_group {
+  width: 100%;
+}
+
+input.ttbp_input,
+select.ttbp_input {
+  width: 100%;
+  border: 1px solid #d9d9d9 !important;
+  font-size: 14x;
+  padding: 6px 8px !important;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+input.ttbp_input:focus {
+  outline: 1px solid var(--primary) !important;
+}
+
+.ttbp_button {
+  color: #fff;
+  background: var(--primary);
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ttbp_close_icon {
+  position: absolute;
+  right: 0px;
+  transform: translate(50%, -50%);
+  top: 0px;
+  z-index: 100;
+  background: var(--primary);
+  padding: 10px;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.ttbp_url {
+  outline: none !important;
+  box-shadow: none !important;
+  color: var(--primary) !important;
+}
+
+.ttbp_table {
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  margin-top: 10px;
+}
+
+.ttbp_table th,
+.ttbp_table td {
+  padding: 8px;
+}
+
+.ttbp_table tr {
+  border-top: 1px solid #d9d9d9;
+}
+
+.ttbp_table thead tr {
+  background: var(--grey);
+}
+
+.ttbp_table thead th {
+  color: var(--black);
+}
+
+.ttbp_table thead td {
+  font-weight: 400 !important;
+}
+
+.ttbp_delete,
+.ttbp_delete_pricing {
+  background: red !important;
+  color: #fff !important;
+  border: 1px solid red !important;
+}
+
+.ttbp_inline_input {
+  display: inline-flex;
+  margin-right: 10px;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ttbp-instruction {
+  font-size: 12px;
+  color: #000;
+  font-weight: 400;
+  display: block;
+  padding-left: 3px;
+}
+
+.ttbp_small_input {
+  width: 80px;
+}
+
+.ttbp_trow_title th {
+  background: #fff;
+  border-top-width: 1px !important;
+  border-bottom-width: 1px !important;
+  border-left-width: 4px;
+  border-left-color: var(--primary) !important;
+  border-style: solid;
+  padding: 13px !important;
+  border-color: #d9d9d9;
+}
+
+.ttbp_customer_table tbody td {
+  vertical-align: top;
+}
+
+.booking_detail {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0 0;
+}
+
+.booking_detail thead tr {
+  background: #F5F5F5;
+  border: 1px solid #d9d9d9;
+}
+
+.booking_detail td,
+.booking_detail th {
+  text-align: left;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 8px;
+  color: #121212;
+}
+
+.booking_detail th {
+  font-weight: 500;
+}
+
+.booking_detail tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.booking_detail tbody {
+  border-right: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+}
+
+.post-type-ttbp_booking #major-publishing-actions,
+.post-type-ttbp_booking .edit-post-status,
+.post-type-ttbp_booking .edit-visibility,
+.post-type-ttbp_booking .edit-timestamp,
+.post-type-ttbp_booking .row-actions .inline,
+.post-type-ttbp_booking .row-actions .trash {
+  display: none !important;
+}
+
+.payment-transaction-details {
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  margin-top: 20px;
+  padding: 0;
+  max-width: 800px;
+}
+
+.payment-transaction-details .hndle {
+  border-bottom: 1px solid #ccd0d4;
+  font-size: 14px;
+  padding: 8px 12px;
+  margin: 0;
+  line-height: 1.4;
+  font-weight: 600;
+  background: #f5f5f5;
+}
+
+.payment-status-header {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-bottom: 1px solid #e2e4e7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.payment-status {
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.payment-status.success .dashicons {
+  color: #46b450;
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.payment-date {
+  color: #606a73;
+  font-size: 13px;
+}
+
+.payment-details-container {
+  display: flex;
+  padding: 15px;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.payment-column {
+  flex: 1;
+  min-width: 300px;
+}
+
+.payment-column h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  color: #23282d;
+}
+
+.payment-info-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.payment-info-table th,
+.payment-info-table td {
+  padding: 8px 0;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f1;
+  font-size: 13px;
+}
+
+.payment-info-table th {
+  width: 40%;
+  color: #606a73;
+  font-weight: normal;
+  vertical-align: top;
+}
+
+.status-succeeded {
+  color: #46b450;
+  font-weight: 500;
+}
+
+.card-details {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #e2e4e7;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+}
+
+.card-icon {
+  margin-right: 10px;
+}
+
+.card-icon img {
+  width: 30px;
+}
+
+.card-number {
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.card-expiry {
+  font-size: 12px;
+  color: #606a73;
+}
+
+.check-passed {
+  color: #46b450;
+}
+
+#ttbp_opt_in_label {
+  width: 350px;
+}
+
+.payment_status {
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  border-radius: 3px;
+  padding: 2px 8px;
+  line-height: 1.5;
+  display: inline-block;
+  text-align: center;
+}
+
+.payment_status.due {
+  background-color: var(--danger);
+}
+
+.payment_status.paid {
+  background-color: var(--success);
+}
