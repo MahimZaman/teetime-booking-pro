@@ -1,7 +1,7 @@
 <?php
 
 if (!defined('ABSPATH')) return;
-
+$weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 ?>
 
 <div class="wrap ttbp-wrap">
@@ -104,7 +104,18 @@ if (!defined('ABSPATH')) return;
                     <td>
                         <div class="ttbp_inline_input">
                             <textarea name="ttbp_payment_notice" style="min-width: 300px" id="payment_notice"><?php echo $this->payment_notice; ?></textarea>
-                            <span class="ttbp-instruction">Enter the payment notice. User <code>{booking_amount}</code>, <code>{total_amount}</code>, <code>{due_amount}</code> for dynamic value</span>
+                            <span class="ttbp-instruction">Enter the payment notice. Use <code>{booking_amount}</code>, <code>{total_amount}</code>, <code>{due_amount}</code> for dynamic value</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="ttbp_pia_label" class="ttbp-label"><?php _e('PIA Label', 'teetime-booking-pro'); ?></label>
+                    </th>
+                    <td>
+                        <div class="ttbp_inline_input">
+                            <textarea name="ttbp_pia_label" style="min-width: 300px" id="pia_label"><?php echo $this->pia_label; ?></textarea>
+                            <span class="ttbp-instruction">Enter the PIA label. Use <code>{discount}</code> for dynamic value</span>
                         </div>
                     </td>
                 </tr>
@@ -171,13 +182,57 @@ if (!defined('ABSPATH')) return;
                             <input type="number" name="ttbp_booking_amount" step="0.01" min="1.00" id="booking-amount" placeholder="Enter amount in <?php echo TTBP_get_currency_symbol($this->currency); ?>" value="<?php echo $this->booking_amount; ?>" required>
                             <span class="ttbp-instruction"><?php _e('Booking Deposit', 'teetime-booking-pro'); ?></span>
                         </label>
-                        <label for="total-amount-9" class="ttbp_inline_input">
-                            <input type="number" name="ttbp_total_amount_9" step="0.01" min="1.00" id="total-amount-9" placeholder="Enter amount in <?php echo TTBP_get_currency_symbol($this->currency); ?>" value="<?php echo $this->total_amount_9; ?>" required>
-                            <span class="ttbp-instruction"><?php _e('Total Amount (9 holes)', 'teetime-booking-pro'); ?></span>
+                        <label for="total-amount-9-walking" class="ttbp_inline_input">
+                            <input type="number" name="ttbp_total_amount_9_walking" step="0.01" min="1.00" id="total-amount-9-walking" placeholder="Enter amount in <?php echo TTBP_get_currency_symbol($this->currency); ?>" value="<?php echo $this->total_amount_9_walking; ?>" required>
+                            <span class="ttbp-instruction"><?php _e('Total Amount Walking (9 holes)', 'teetime-booking-pro'); ?></span>
                         </label>
-                        <label for="total-amount-18" class="ttbp_inline_input">
-                            <input type="number" name="ttbp_total_amount_18" step="0.01" min="1.00" id="total-amount-18" placeholder="Enter amount in <?php echo TTBP_get_currency_symbol($this->currency); ?>" value="<?php echo $this->total_amount_18; ?>" required>
-                            <span class="ttbp-instruction"><?php _e('Total Amount (18 holes)', 'teetime-booking-pro'); ?></span>
+                        <label for="total-amount-9-cart" class="ttbp_inline_input">
+                            <input type="number" name="ttbp_total_amount_9_cart" step="0.01" min="1.00" id="total-amount-9-cart" placeholder="Enter amount in <?php echo TTBP_get_currency_symbol($this->currency); ?>" value="<?php echo $this->total_amount_9_cart; ?>" required>
+                            <span class="ttbp-instruction"><?php _e('Total Amount Cart (9 holes)', 'teetime-booking-pro'); ?></span>
+                        </label>
+                        <label for="total-amount-18-walking" class="ttbp_inline_input">
+                            <input type="number" name="ttbp_total_amount_18_walking" step="0.01" min="1.00" id="total-amount-18-walking" placeholder="Enter amount in <?php echo TTBP_get_currency_symbol($this->currency); ?>" value="<?php echo $this->total_amount_18_walking; ?>" required>
+                            <span class="ttbp-instruction"><?php _e('Total Amount Walking (18 holes)', 'teetime-booking-pro'); ?></span>
+                        </label>
+                        <label for="total-amount-18-cart" class="ttbp_inline_input">
+                            <input type="number" name="ttbp_total_amount_18_cart" step="0.01" min="1.00" id="total-amount-18-cart" placeholder="Enter amount in <?php echo TTBP_get_currency_symbol($this->currency); ?>" value="<?php echo $this->total_amount_18_cart; ?>" required>
+                            <span class="ttbp-instruction"><?php _e('Total Amount Cart (18 holes)', 'teetime-booking-pro'); ?></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="advanced-payment-discount" class="ttbp-label"><?php _e('Advanced Payment Discount(%)', 'teetime-booking-pro'); ?> </label>
+
+                    </th>
+                    <td>
+                        <label for="advanced-payment-discount" class="ttbp_inline_input">
+                            <input type="number" name="ttbp_adv_payment_discount" step="0.01" min="1.00" id="advanced-payment-discount" placeholder="Enter discount percentage" value="<?php echo $this->adv_payment_discount; ?>" required>
+                            <span class="ttbp-instruction"><?php _e('Enter the discount percentage for advanced payment.', 'teetime-booking-pro'); ?></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="advanced-payment-discount" class="ttbp-label"><?php _e('Cart Tax Percentage (%)', 'teetime-booking-pro'); ?> </label>
+
+                    </th>
+                    <td>
+                        <label for="tax-rate" class="ttbp_inline_input">
+                            <input type="number" name="ttbp_cart_tax_rate" step="0.01" min="0.00" id="tax-rate" placeholder="Enter tax percentage" value="<?php echo $this->cart_tax_rate; ?>" required>
+                            <span class="ttbp-instruction"><?php _e('Enter the tax percentage for cart.', 'teetime-booking-pro'); ?></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="taxable_amount" class="ttbp-label"><?php _e('Taxable Amount (Cart)', 'teetime-booking-pro'); ?> </label>
+
+                    </th>
+                    <td>
+                        <label for="taxable_amount" class="ttbp_inline_input">
+                            <input type="number" name="ttbp_taxable_amount" step="0.01" min="0.00" id="taxable_amount" placeholder="Taxable Amount" value="<?php echo $this->taxable_amount; ?>" required>
+                            <span class="ttbp-instruction"><?php _e('Cart Taxable Amount.', 'teetime-booking-pro'); ?></span>
                         </label>
                     </td>
                 </tr>
@@ -204,43 +259,120 @@ if (!defined('ABSPATH')) return;
                         <h3 class="ttbp_section_heading"><?php _e('Custom Pricing', 'teetime-booking-pro'); ?></h3>
                         <hr>
                         <br>
-                        <button type="button" class="ttbp_button ttbp_open_modal" data-modal="ttbp_add_pricing"><?php _e('Add Pricing <i class="fa-solid fa-plus" style="font-size: 12px"></i>', 'teetime-booking-pro'); ?></button>
+                        <button type="button" class="ttbp_button ttbp_open_pricing ttbp_open_modal" data-modal="ttbp_add_pricing"><?php _e('Add Pricing <i class="fa-solid fa-plus" style="font-size: 12px"></i>', 'teetime-booking-pro'); ?></button>
                         <?php if (!empty($this->custom_pricing)): ?>
                             <table class="ttbp_table">
-                                <thead>
-                                    <tr>
-                                        <th><?php _e('Weekday', 'teetime-booking-pro'); ?></th>
-                                        <th><?php _e('Booking Deposit', 'teetime-booking-pro'); ?></th>
-                                        <th><?php _e('Time Window', 'teetime-booking-pro'); ?></th>
-                                        <th><?php _e('Total Amount (9 Holes)', 'teetime-booking-pro'); ?></th>
-                                        <th><?php _e('Total Amount (18 Holes)', 'teetime-booking-pro'); ?></th>
-                                        <th><?php _e('Action', 'teetime-booking-pro'); ?></th>
-                                    </tr>
-                                </thead>
                                 <tbody>
                                     <?php foreach ($this->custom_pricing as $pricing_key => $pricing_value):
-                                        $p_weekday = isset($pricing_value['weekday']) ? $pricing_value['weekday'] : '--';
-                                        $p_booking_amount = isset($pricing_value['booking_amount']) ? $pricing_value['booking_amount'] : '--';
-                                        $p_total_amount_9 = isset($pricing_value['total_amount_9']) ? $pricing_value['total_amount_9'] : '--';
-                                        $p_total_amount_18 = isset($pricing_value['total_amount_18']) ? $pricing_value['total_amount_18'] : '--';
-                                        $p_window_start = isset($pricing_value['window_start']) ? $pricing_value['window_start'] : '--';
-                                        $p_window_end = isset($pricing_value['window_end']) ? $pricing_value['window_end'] : '--';
                                     ?>
-                                        <tr>
-                                            <td><?php echo date('l', strtotime("Sunday +{$p_weekday} days")); ?></td>
-                                            <td><?php echo TTBP__price($p_booking_amount); ?></td>
-                                            <td><?php echo date('g:i A', strtotime($p_window_start)) . ' - ' . date('g:i A', strtotime($p_window_end)) ?></td>
-                                            <td><?php echo TTBP__price($p_total_amount_9); ?></td>
-                                            <td><?php echo TTBP__price($p_total_amount_18); ?></td>
-                                            <td>
-                                                <button type="button" class="button button-primary ttbp_edit_pricing ttbp_open_modal" data-modal="ttbp_add_pricing" data-weekday="<?php echo $p_weekday; ?>" data-booking_amount="<?php echo $p_booking_amount; ?>" data-total_amount_9="<?php echo $p_total_amount_9; ?>" data-total_amount_18="<?php echo $p_total_amount_18; ?>" data-window_start="<?php echo $p_window_start ?>" data-window_end="<?php echo $p_window_end; ?>"><?php _e('Edit', 'teetime-booking-bro'); ?></button>
-                                                <button type="button" class="button ttbp_delete_pricing" data-weekday="<?php echo $p_weekday; ?>"><i class="fa-solid fa-trash"></i></button>
+                                        <tr style="background: rgba(0,0,0,0.1);">
+                                            <td style="text-align: left;color: #000" colspan="5"><?php echo date('l', strtotime("Sunday +{$pricing_key} days")); ?></td>
+                                            <td style="text-align: right;">
+                                                <button type="button" class="button button-primary ttbp_edit_pricing ttbp_open_modal" data-modal="ttbp_add_pricing" data-weekday="<?php echo $pricing_key; ?>"><?php _e('Edit', 'teetime-booking-bro'); ?></button>
+                                                <button type="button" class="button ttbp_delete_pricing" data-weekday="<?php echo $pricing_key; ?>"><i class="fa-solid fa-trash"></i></button>
                                             </td>
                                         </tr>
+                                        <tr style="background:rgb(245, 245, 245)">
+                                            <th><?php _e('Booking Deposit', 'teetime-booking-pro'); ?></th>
+                                            <th><?php _e('Time Window', 'teetime-booking-pro'); ?></th>
+                                            <th><?php _e('Total Amount Walking (9 Holes) ', 'teetime-booking-pro'); ?></th>
+                                            <th><?php _e('Total Amount Cart (9 Holes) ', 'teetime-booking-pro'); ?></th>
+                                            <th><?php _e('Total Amount Walking (18 Holes) ', 'teetime-booking-pro'); ?></th>
+                                            <th><?php _e('Total Amount Cart (18 Holes) ', 'teetime-booking-pro'); ?></th>
+                                        </tr>
+                                        <?php
+                                        $p_weekday = isset($pricing_key) ? $pricing_key : '--';
+                                        $p_booking_amount = isset($pricing_value['booking_amount']) ? $pricing_value['booking_amount'] : [];
+                                        $p_total_amount_9_walking = isset($pricing_value['total_amount_9_walking']) ? $pricing_value['total_amount_9_walking'] : [];
+                                        $p_total_amount_9_cart = isset($pricing_value['total_amount_9_cart']) ? $pricing_value['total_amount_9_cart'] : [];
+                                        $p_total_amount_18_walking = isset($pricing_value['total_amount_18_walking']) ? $pricing_value['total_amount_18_walking'] : [];
+                                        $p_total_amount_18_cart = isset($pricing_value['total_amount_18_cart']) ? $pricing_value['total_amount_18_cart'] : [];
+                                        $p_window_start = isset($pricing_value['window_start']) ? $pricing_value['window_start'] : [];
+                                        $p_window_end = isset($pricing_value['window_end']) ? $pricing_value['window_end'] : [];
+                                        ?>
+                                        <?php foreach ($p_booking_amount as $key => $value): ?>
+                                            <tr>
+                                                <td><?php echo TTBP__price($p_booking_amount[$key]); ?></td>
+                                                <td><?php echo date('g:i A', strtotime($p_window_start[$key])) . ' - ' . date('g:i A', strtotime($p_window_end[$key])) ?></td>
+                                                <td><?php echo TTBP__price($p_total_amount_9_walking[$key]); ?></td>
+                                                <td><?php echo TTBP__price($p_total_amount_9_cart[$key]); ?></td>
+                                                <td><?php echo TTBP__price($p_total_amount_18_walking[$key]); ?></td>
+                                                <td><?php echo TTBP__price($p_total_amount_18_cart[$key]); ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
                         <?php endif; ?>
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="2">
+                        <h3 class="ttbp_section_heading"><?php _e('Restriction Rules', 'teetime-booking-pro'); ?></h3>
+                        <hr>
+                        <br>
+                        <table class="ttbp_table ttbp_restriction_rules_table">
+                            <tbody>
+                                <?php
+
+                                foreach ($weekdays as $weekday) {
+                                ?>
+                                    <tr>
+                                        <th><?php _e($weekday, 'teetime-booking-pro'); ?></th>
+                                        <td>
+                                            <input type="time" name="ttbp_restrict_start_<?php echo $weekday ?>" value="<?php echo get_option('ttbp_restrict_start_' . $weekday) ?>" />
+                                        </td>
+                                        <td>
+                                            <input type="time" name="ttbp_restrict_end_<?php echo $weekday ?>" value="<?php echo get_option('ttbp_restrict_end_' . $weekday) ?>" />
+                                        </td>
+                                        <td>
+                                            <select name="ttbp_restrict_holes_<?php echo $weekday ?>">
+                                                <option value="9" <?php selected(get_option('ttbp_restrict_holes_' . $weekday), '9'); ?>>9</option>
+                                                <option value="18" <?php selected(get_option('ttbp_restrict_holes_' . $weekday), '18'); ?>>18</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="ttbp_restrict_ride_<?php echo $weekday ?>">
+                                                <option value="walking" <?php selected(get_option('ttbp_restrict_ride_' . $weekday), 'walking'); ?>><?php _e('Walking', 'teetime-booking-pro'); ?></option>
+                                                <option value="cart" <?php selected(get_option('ttbp_restrict_ride_' . $weekday), 'cart'); ?>><?php _e('Cart', 'teetime-booking-pro'); ?></option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                <?php
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="2">
+                        <h3 class="ttbp_section_heading"><?php _e('Advanced Payment Rules', 'teetime-booking-pro'); ?></h3>
+                        <hr>
+                        <br>
+                        <table class="ttbp_table ttbp_restriction_rules_table">
+                            <tbody>
+                                <?php foreach ($weekdays as $weekday) { ?>
+                                    <tr>
+                                        <th><?php _e($weekday, 'teetime-booking-pro'); ?></th>
+                                        <td>
+                                            <input type="time" name="ttbp_advPay_restrict_start_<?php echo $weekday ?>" value="<?php echo get_option('ttbp_advPay_restrict_start_' . $weekday) ?>" />
+                                        </td>
+                                        <td>
+                                            <input type="time" name="ttbp_advPay_restrict_end_<?php echo $weekday ?>" value="<?php echo get_option('ttbp_advPay_restrict_end_' . $weekday) ?>" />
+                                        </td>
+                                        <td>
+                                            <select name="ttbp_advPay_rule_<?php echo $weekday ?>">
+                                                <option value="force-advPay" <?php selected(get_option('ttbp_advPay_rule_' . $weekday), 'force-advPay'); ?>>Force Advanced Pay</option>
+                                                <option value="nonForce-advPay" <?php selected(get_option('ttbp_advPay_rule_' . $weekday), 'nonForce-advPay'); ?>>Non Force Advanced Pay</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                <?php
+                                }
+                                ?>
+                            </tbody>
+                        </table>
                     </th>
                 </tr>
                 <tr>
@@ -291,6 +423,10 @@ if (!defined('ABSPATH')) return;
                 <tr>
                     <th colspan="2">
                         <button type="submit" class="ttbp_button"><?php _e('Save Changes', 'teetime-booking-pro'); ?></button>
+                        <button type="button" class="ttbp_button" id="ttbp_reset_settings">
+                            <?php _e('Reset Settings', 'teetime-booking-pro'); ?>
+                            <span class="ttbp-btn-loader"></span>
+                        </button>
                     </th>
                 </tr>
             </tbody>

@@ -1,14 +1,21 @@
 $ = jQuery;
+let currentFetchSlots = null;
 
 function updateSlots() {
   let selectedDate = $("#ttbp_date").val();
   const slots = $('input:radio[name="ttbp_players"]:checked').val();
   const holes = $('input:radio[name="ttbp_holes"]:checked').val();
   const tod = $('input:radio[name="ttbp_tod"]:checked').val();
+  const ride = $('input:radio[name="ttbp_ride"]:checked').val();
   const golf_course = $("#ttbp_golf_course").val();
+  $(".ttbp-form").addClass("ttbp-loading");
   $(".ttbp_slots").html("<p>Loading...</p>");
 
-  $.ajax({
+  if (currentFetchSlots) {
+    currentFetchSlots.abort();
+  }
+
+  currentFetchSlots = $.ajax({
     url: ttbp_ajax.ajax_url,
     type: "POST",
     data: {
@@ -18,36 +25,48 @@ function updateSlots() {
       holes: holes,
       tod: tod,
       golf_course: golf_course,
+      ride: ride,
       nonce: ttbp_ajax.nonce,
     },
-    success: function (response) {
-      $(".ttbp_slots").html(
-        response.length > 0 ? response : "No slots available"
-      );
-      $(`#ttbp_golf_course`).on("change", function () {
-        $(`#ttbp_date`).change();
-      });
-
-      $(`input:radio[name="ttbp_players"]`).on("change", function () {
-        $(`#ttbp_date`).change();
-      });
-
-      $(`input:radio[name="ttbp_holes"]`).on("change", function () {
-        $(`#ttbp_date`).change();
-      });
-
-      $(`input:radio[name="ttbp_tod"]`).on("change", function () {
-        $(`#ttbp_date`).change();
-      });
-
-      $(`input:radio[name="ttbp_time"]`).on("change", function () {
-        TTBP__moveToCheckout();
-      });
-    },
+    success: function (response) {},
     error: function (err) {
-      $(".ttbp_slots").html(
-        "<p>Error loading times, Try reloading the page</p>"
-      );
+      err.responseText ? console.error(err.responseText) : "";
+    },
+    complete: function (jqXHR, textStatus) {
+      currentFetchSlots = null;
+      if (textStatus == "success") {
+        $(".ttbp_slots").html(
+          jqXHR.responseText ? jqXHR.responseText : "No slots available"
+        );
+        $(".ttbp-form").removeClass("ttbp-loading");
+        $(`#ttbp_golf_course`).on("change", function () {
+          $(`#ttbp_date`).change();
+        });
+
+        $(`input:radio[name="ttbp_players"]`).on("change", function () {
+          $(`#ttbp_date`).change();
+        });
+
+        $(`input:radio[name="ttbp_holes"]`).on("change", function () {
+          $(`#ttbp_date`).change();
+        });
+
+        $(`input:radio[name="ttbp_ride"]`).on("change", function () {
+          $(`#ttbp_date`).change();
+        });
+
+        $(`input:radio[name="ttbp_tod"]`).on("change", function () {
+          $(`#ttbp_date`).change();
+        });
+
+        $(`input:radio[name="ttbp_time"]`).on("change", function () {
+          TTBP__moveToCheckout();
+        });
+      } else if (textStatus == "error") {
+        $(".ttbp_slots").html(
+          "<p>Error loading times, Try reloading the page</p>"
+        );
+      }
     },
   });
 }
@@ -62,19 +81,42 @@ function TTBP__updateBookingReview() {
   let bookingValue = $(`input[name="ttbp_time"]:checked`).data(
     "booking_amount"
   );
+  const paymentMethod = $(".ttbp_method_select:checked").val();
+  if (paymentMethod == "offline") {
+    bookingValue = 0;
+  }
   const time = $(`input[name="ttbp_time"]:checked`).val();
   const holes = $(`input[name="ttbp_holes"]:checked`).val();
+  const ride = $(`input[name="ttbp_ride"]:checked`).val();
   const players = $(`input[name="ttbp_players"]:checked`).val();
   const course = $(`#ttbp_golf_course option:selected`).text();
+  const advPay = $("#ttbp_adv_pay:checked").val();
+  const taxRate = $("#ttbp_tax_rate").val();
+  let taxAmount = 0;
+
   let totalValue = $(`input[name="ttbp_time"]:checked`).data(
     `total_pay_${holes}`
   );
+  let taxableAmount =
+    $("#ttbp_taxable_amount").val() > 0
+      ? $("#ttbp_taxable_amount").val()
+      : totalValue;
+  if (ride === "cart") {
+    taxAmount =
+      parseFloat(taxableAmount) *
+      (parseFloat(taxRate) / 100) *
+      parseInt(players);
+  }
   bookingAmount = parseFloat(bookingValue) * parseInt(players);
   totalAmount = parseFloat(totalValue) * parseInt(players);
   let duePay =
     parseFloat(totalAmount) - parseFloat(bookingAmount) > 0
-      ? parseFloat(totalAmount) - parseFloat(bookingAmount)
+      ? parseFloat(totalAmount) - parseFloat(bookingAmount) + taxAmount
       : 0;
+  if (advPay && paymentMethod !== "offline") {
+    duePay = 0;
+    bookingAmount = totalAmount - totalAmount * (parseFloat(advPay) / 100);
+  }
   const date = $("#ttbp_date").val();
 
   $("#ttbp_booking_review").html(`<div class="ttbp_loader_placeholder">
@@ -99,6 +141,11 @@ function TTBP__updateBookingReview() {
       course: course,
       date: date,
       time: time,
+      ride: ride,
+      advPay: advPay,
+      taxRate: taxRate,
+      taxAmount: taxAmount,
+      method: $(".ttbp_method_select:checked").val(),
     },
     success: function (res) {
       $("#ttbp_booking_review").html(res);
@@ -162,10 +209,15 @@ function updateDateText(date) {
 
 jQuery(document).ready(function ($) {
   //Toggle Payment Methods
-  $(".ttbp_method_select").change(function () {
-    $(".ttbp_payment_content").slideUp();
-    $(`[data-tab="${$(this).attr("id")}"`).slideDown();
-  });
+  $(document)
+    .on("change", ".ttbp_method_select", function () {
+      $(".ttbp_payment_content").slideUp();
+      $(`[data-tab="${$(this).attr("id")}"`).slideDown();
+      TTBP__updateBookingReview();
+    })
+    .on("change", "#ttbp_adv_pay", function () {
+      TTBP__updateBookingReview();
+    });
 
   $($(".ttbp_method_select")[0]).trigger("click");
 
@@ -173,6 +225,9 @@ jQuery(document).ready(function ($) {
   $("#ttbp_previous").click(function () {
     $(".ttbp_booking_step").hide();
     $("#ttbp_step_1").show();
+    $("#ttbp_error").removeClass("visible");
+    $("#ttbp_error .status-message").html("");
+    updateSlots();
   });
 
   // Custom Datepicker for booking form
@@ -230,52 +285,103 @@ jQuery(document).ready(function ($) {
   // Custom Datepicker for booking form Ends
 
   // Submit booking form
-  $("#ttbp-booking-form").on("submit", function (e) {
-    e.preventDefault();
+  $(document)
+    .on("submit", "#ttbp-booking-form", function (e) {
+      e.preventDefault();
 
-    const slot = $('input:radio[name="ttbp_time"]:checked').val();
+      const slot = $('input:radio[name="ttbp_time"]:checked').val();
 
-    if (!slot) {
-      alert("Select a slot first");
-      return;
-    }
-
-    $("#ttbp_payment_processing").addClass("visible");
-    $("#ttbp_error").removeClass("visible");
-
-    const gateway = $(".ttbp_method_select:checked").val();
-
-    let formData = $(this).serialize();
-
-    if (gateway === "offline") {
-      TTBP__insertBooking(formData);
-    } else {
-      if (!clover) {
-        $("#ttbp-clover-response").html("Something went wrong.");
-        $("#ttbp-clover-response").css({
-          color: "var(--danger)",
-        });
+      if (!slot) {
+        alert("Select a slot first");
         return;
       }
 
-      clover.createToken().then(function (result) {
-        if (result.errors) {
-          Object.values(result.errors).forEach(function (value) {
-            $("#ttbp-clover-response").text(value);
-            $("#ttbp-clover-response").css({
-              color: "var(--danger)",
-            });
-          });
-        } else {
-          formData += "&ttbp_clover_token=" + encodeURIComponent(result.token);
-          TTBP__insertBooking(formData);
-        }
-      });
-    }
-  });
+      $("#ttbp_payment_processing").addClass("visible");
+      $("#ttbp_error").removeClass("visible");
 
-  $($('input:radio[name="ttbp_holes"]')[1]).trigger("click");
-  $($('input:radio[name="ttbp_players"]')[0]).trigger("click");
+      const gateway = $(".ttbp_method_select:checked").val();
+
+      let formData = $(this).serialize();
+
+      if (gateway === "offline") {
+        TTBP__insertBooking(formData);
+      } else {
+        if (!clover) {
+          $("#ttbp-clover-response").html("Something went wrong.");
+          $("#ttbp-clover-response").css({
+            color: "var(--danger)",
+          });
+          return;
+        }
+
+        clover.createToken().then(function (result) {
+          if (result.errors) {
+            Object.values(result.errors).forEach(function (value) {
+              $("#ttbp-clover-response").text(value);
+              $("#ttbp-clover-response").css({
+                color: "var(--danger)",
+              });
+            });
+          } else {
+            formData +=
+              "&ttbp_clover_token=" + encodeURIComponent(result.token);
+            TTBP__insertBooking(formData);
+          }
+        });
+      }
+    })
+    .on("change", '[name="ttbp_time"]', function () {
+      const date = $("#ttbp_date").val();
+      const time = $('[name="ttbp_time"]:checked').val();
+      $("#ttbp_payment_methods").css({
+        opacity: 0.5,
+        pointerEvents: "none",
+      });
+      $.ajax({
+        url: ttbp_ajax.ajax_url,
+        type: "POST",
+        data: {
+          action: "ttbp_update_payment_gateway",
+          date: date,
+          time: time,
+        },
+        success: function (res) {
+          if (res.success) {
+            const forceAdv = res.data.forceAdv;
+            if (forceAdv) {
+              $("#ttbp_adv_pay").prop("checked", true);
+              $("#payment_method_offline").parent().parent().hide();
+              $("#payment_method_clover").trigger("click");
+              $("#ttbp_adv_pay").css({
+                pointerEvents: "none",
+              });
+            } else {
+              $("#ttbp_adv_pay").prop("checked", false);
+              $("#payment_method_offline").parent().parent().show();
+              $("#payment_method_offline").trigger("click");
+              $("#ttbp_adv_pay").css({
+                pointerEvents: "all",
+              });
+            }
+          }
+          $("#ttbp_payment_methods").css({
+            opacity: 1,
+            pointerEvents: "all",
+          });
+        },
+        error: function (err) {
+          $("#ttbp_payment_methods").html(err.responseText);
+          $("#ttbp_payment_methods").css({
+            opacity: 0.5,
+            pointerEvents: "all",
+          });
+        },
+      });
+    });
+
+  $($('input:radio[name="ttbp_holes"]')[0]).trigger("click");
+  $($('input:radio[name="ttbp_ride"]')[0]).trigger("click");
+  $($('input:radio[name="ttbp_players"]')[3]).trigger("click");
   $($('input:radio[name="ttbp_tod"]')[0]).trigger("click");
 
   // Fetch available tee times on date change

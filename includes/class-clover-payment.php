@@ -52,7 +52,7 @@ class TTBP_Clover_Pay
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
-    public function create_charge($amount_cents, $source_token)
+    public function create_charge($amount_cents, $source_token, $payment_data)
     {
         try {
             // Get credentials and IP
@@ -64,8 +64,17 @@ class TTBP_Clover_Pay
             $body = [
                 'amount'   => (int) $amount_cents, // in cents
                 'currency' => strtolower(get_option('ttbp_currency', 'usd')),
+                'capture' => true,
+                'description' => $payment_data['description'],
                 'source'   => sanitize_text_field($source_token),
             ];
+
+            if (isset($payment_data['tax_amount'])) {
+                $tax_in_cents = (float) $payment_data['tax_amount'] * 100;
+                $total_with_tax = (int) $amount_cents + (int) $tax_in_cents;
+                $body['amount'] = $total_with_tax;
+                $body['tax_amount'] = $tax_in_cents;
+            }
 
             // Prepare headers
             $headers = [

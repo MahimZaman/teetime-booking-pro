@@ -2,8 +2,8 @@
 /*
 Plugin Name: TeeTime Booking Pro
 Description: A complete tee time booking solution with real-time availability, customer management, and payments.
-Version: 1.0
-Author: Noor Kamal
+Version: 2.1
+Author: Golf Payments
 Text Domain: teetime-booking-pro
 Requires Plugins: woocommerce 
 */

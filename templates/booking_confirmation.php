@@ -56,7 +56,7 @@ $course = isset($term->name) ? $term->name : 'Not Mentioned';
 
         <div class="ttbp_confirmation_detail-row">
             <div class="ttbp_confirmation_detail-label">Payment Method</div>
-            <div class="ttbp_confirmation_detail-value"><?php echo $p_method; ?></div>
+            <div class="ttbp_confirmation_detail-value"><?php echo $p_method == 'offline' ? get_option('ttbp_offline_pay_label', 'Pay at course') : ucfirst($p_method); ?></div>
         </div>
 
         <?php for ($i = 1; $i <= (int) $players; $i++):
@@ -70,13 +70,21 @@ $course = isset($term->name) ? $term->name : 'Not Mentioned';
                 <?php endif; ?>
             </div>
         <?php endfor; ?>
+        <div class="ttbp_confirmation_detail-row">
+            <div class="ttbp_confirmation_detail-label">
+                <button class="ttbp_button"><a style="color: #fff ; text-decoration: none" href="<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>"><?php echo __('Return to My Account', 'teetime-booking-pro'); ?></a></button>
+            </div>
+        </div>
 
         <div class="ttbp_confirmation_contact-info">
             If you need to modify or cancel your booking, please contact us at:<br>
-            📞 <?php echo get_option('ttbp_support_phone'); ?><br>
+            📞 <?php echo get_option('ttbp_support_phone') ? get_option('ttbp_support_phone') : 'XXXX-XXX-XXXX' ; ?><br>
             📧 <?php echo get_option('ttbp_email_from'); ?>
         </div>
     </div>
+
+    <?php $is_adv_pay = get_post_meta($booking_id, 'ttbp_adv_pay', true) ? get_post_meta($booking_id, 'ttbp_adv_pay', true) : false;
+    echo $is_adv_pay; ?>
 
     <div class="ttbp_confirmation_footer">
         Thank you for choosing <?php echo $course; ?>.<br>

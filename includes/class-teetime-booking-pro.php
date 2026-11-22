@@ -11,6 +11,7 @@ class TeeTime_Booking_Pro
     private $cpt;
     private $admin;
     private $woo_modifier;
+    private $analytics;
 
     public function init()
     {
@@ -21,11 +22,14 @@ class TeeTime_Booking_Pro
 
     private function load_dependencies()
     {
+        require_once TTBP_PATH . 'includes/class-ttbp-modals.php';
         require_once TTBP_PATH . 'includes/class-ttbp-shortcodes.php';
         require_once TTBP_PATH . 'includes/class-ttbp-cpt.php';
         require_once TTBP_PATH . 'includes/class-ttbp-ajax.php';
         require_once TTBP_PATH . 'includes/class-ttbp-admin.php';
         require_once TTBP_PATH . 'includes/class-ttbp-woocommerce.php';
+        require_once TTBP_PATH . 'includes/class-ttbp-analytics.php';
+        require_once TTBP_PATH . 'includes/class-pos-payment.php';
     }
 
     private function init_classes()
@@ -35,6 +39,7 @@ class TeeTime_Booking_Pro
         $this->admin      = new TTBP_Admin();
         $this->ajax  = new TTBP_Ajax();
         $this->woo_modifier = new TTBP_WooCommerce();
+        $this->analytics = new TTBP_Analytics();
     }
 
     private function register_hooks()
@@ -47,7 +52,21 @@ class TeeTime_Booking_Pro
 
         // Register CPT
         add_action('init', [$this->cpt, 'register_post_type']);
+        add_action('init', [$this->cpt, 'register_coupons_post_type']);
         add_action('init', [$this->cpt, 'register_taxonomy']);
+        add_action('template_include', [$this, 'ttbp_starter_sheet_template']);
+    }
+
+    public function ttbp_starter_sheet_template($template)
+    {
+        if (isset($_GET['view']) && sanitize_text_field($_GET['view']) === 'starter_sheet') {
+            $custom_template = TTBP_PATH . 'templates/template-starter-sheet.php';
+            if (file_exists($custom_template)) {
+                return $custom_template;
+            }
+        }
+
+        return $template;
     }
 
     public function enqueue_assets()
@@ -55,6 +74,7 @@ class TeeTime_Booking_Pro
         wp_enqueue_style('ttbp-flatpickr', 'https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css', [], time());
         wp_enqueue_style('ttbp-fa', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css', array(), time());
         wp_enqueue_style('ttbp-style', TTBP_URL . 'css/style.css', [], time());
+        wp_enqueue_style('ttbp-analytics', TTBP_URL . 'css/analytics.css', [], time());
         wp_enqueue_script('jquery');
 
         $sandbox = get_option('ttbp_clover_env') == 'test' ? true : false;
@@ -89,7 +109,8 @@ class TeeTime_Booking_Pro
             'thousand_separator' => get_option('ttbp_thousand_separator'),
             'decimals'           => get_option('ttbp_decimals'),
             'notice'           => get_option('ttbp_payment_notice'),
-            'timezone'          => get_option('ttbp_default_timezone')
+            'timezone'          => get_option('ttbp_default_timezone'),
+            'duration' => get_option('ttbp_default_duration'),
         ]);
     }
 }

@@ -89,6 +89,26 @@ if (!defined('ABSPATH')) return;
                         <input type="password" name="ttbp_clover_private_key" id="ttbp_clover_private_key" value="<?php echo get_option('ttbp_clover_private_key', ''); ?>">
                     </td>
                 </tr>
+                <tr class="ttbp_trow_title">
+                    <th colspan="2"><?php _e('Clover POS Device (Ecommerce API Settings)', 'teetime-booking-pro'); ?></th>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="ttbp_device_id"><?php _e('Clover Device ID', 'teetime-booking-pro'); ?></label>
+                    </th>
+                    <td>
+                        <input type="text" name="ttbp_device_id" id="ttbp_device_id" value="<?php echo get_option('ttbp_device_id', ''); ?>">
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="ttbp_pos_id"><?php _e('Clover POS ID', 'teetime-booking-pro'); ?></label>
+                    </th>
+                    <td>
+                        <input type="text" name="ttbp_pos_id" id="ttbp_pos_id" value="<?php echo get_option('ttbp_pos_id', ''); ?>">
+                    </td>
+                </tr>
+
             </tbody>
         </table>
         <?php submit_button('Save Settings'); ?>

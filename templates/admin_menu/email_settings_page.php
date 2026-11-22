@@ -72,6 +72,7 @@ if (empty($canceled_email_template)) {
                         <code>{{time}}</code>,
                         <code>{{players}}</code>,
                         <code>{{holes}}</code>,
+                        <code>{{ride}}</code>,
                         <code>{{golf_course}}</code>,
                         <code>{{support_email}}</code>.
                         <code>{{booking_amount}}</code>.
@@ -103,6 +104,7 @@ if (empty($canceled_email_template)) {
                         <code>{{time}}</code>,
                         <code>{{players}}</code>,
                         <code>{{holes}}</code>,
+                        <code>{{ride}}</code>,
                         <code>{{golf_course}}</code>,
                         <code>{{support_email}}</code>.
                         <code>{{booking_amount}}</code>.
@@ -134,6 +136,7 @@ if (empty($canceled_email_template)) {
                         <code>{{time}}</code>,
                         <code>{{players}}</code>,
                         <code>{{holes}}</code>,
+                        <code>{{ride}}</code>,
                         <code>{{golf_course}}</code>,
                         <code>{{support_email}}</code>.
                         <code>{{booking_amount}}</code>.

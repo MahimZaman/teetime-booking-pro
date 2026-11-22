@@ -71,20 +71,37 @@ $query_confirmation = isset($_GET['booking_confirmation']) ? sanitize_text_field
 
             <!-- Holes -->
             <div class="ttbp_holes">
+                <label for="ttbp_hole_18" class="ttbp_hole_btn">
+                    <input type="radio" name="ttbp_holes" id="ttbp_hole_18" value="18">
+                    <span>18 <?php _e('Holes', 'teetime-booking-pro'); ?></span>
+                </label>
                 <label for="ttbp_hole_9" class="ttbp_hole_btn">
                     <input type="radio" name="ttbp_holes" id="ttbp_hole_9" value="9">
                     <span>9 <?php _e('Holes', 'teetime-booking-pro'); ?></span>
                 </label>
-                <label for="ttbp_hole_18" class="ttbp_hole_btn">
-                    <input type="radio" name="ttbp_holes" id="ttbp_hole_18" value="18">
-                    <span>18 <?php _e('Holes', 'teetime-booking-pro'); ?></span>
+            </div>
+
+            <!-- Ride -->
+            <div class="ttbp_rides">
+                <label for="ttbp_ride_cart" class="ttbp_ride_selector">
+                    <input type="radio" name="ttbp_ride" id="ttbp_ride_cart" value="cart">
+                    <span>
+                        <?php
+                        TTBP_get_cart_icon();
+                        _e('Cart', 'teetime-booking-pro');
+                        ?>
+                    </span>
+                </label>
+                <label for="ttbp_ride_walking" class="ttbp_ride_selector">
+                    <input type="radio" name="ttbp_ride" id="ttbp_ride_walking" value="walking">
+                    <span><i class="fa-solid fa-person-walking"></i> <?php _e('Walking', 'teetime-booking-pro'); ?></span>
                 </label>
             </div>
 
             <!-- Tee Time Dropdown -->
             <label class="ttbp_booking_form_label"><?php _e('Select your slot', 'teetime-booking-pro'); ?></label>
             <div for class="ttbp_slots">
-                <p class="ttbp_placeholder">Select options to get slots</p>
+                <p class="ttbp_placeholder"><?php _e('Select options to get slots', 'teetime-booking-pro'); ?></p>
             </div>
         </div>
 
@@ -110,6 +127,8 @@ $query_confirmation = isset($_GET['booking_confirmation']) ? sanitize_text_field
                         <input type="tel" name="ttbp_phone" id="ttbp_phone" class="ttbp_input_text" required>
                     </div>
                     <input type="hidden" name="ttbp_booking_amount" id="ttbp_booking_amount" />
+                    <input type="hidden" name="ttbp_tax_rate" id="ttbp_tax_rate" value="<?php echo get_option('ttbp_cart_tax_rate', 0)?>"/>
+                    <input type="hidden" name="ttbp_taxable_amount" id="ttbp_taxable_amount" value="<?php echo get_option('ttbp_taxable_amount', 0)?>"/>
                     <input type="hidden" name="ttbp_total_amount" id="ttbp_total_amount" />
                     <input type="hidden" name="ttbp_payment_status" id="ttbp_payment_status" value="due" />
 
@@ -123,6 +142,17 @@ $query_confirmation = isset($_GET['booking_confirmation']) ? sanitize_text_field
                         <?php
                         $offline = get_option('ttbp_offline_stat');
                         $clover = get_option('ttbp_clover_stat');
+                        $today_weekday = date('l');
+                        $advStart = get_option('ttbp_advPay_restrict_start_' . $today_weekday);
+                        $advEnd = get_option('ttbp_advPay_restrict_end_' . $today_weekday);
+                        $advRule = get_option('ttbp_advPay_rule_' . $today_weekday);
+                        $today_currentTime = date('H:i');
+                        $forceAdv = false;
+                        if ($today_currentTime >= $advStart && $today_currentTime <= $advEnd) {
+                            if ($advRule == 'force-advPay') {
+                                $forceAdv = true;
+                            }
+                        }
                         ?>
                         <?php if ($offline === 'enable'): ?>
                             <div class="ttbp_payment_method">
@@ -136,7 +166,14 @@ $query_confirmation = isset($_GET['booking_confirmation']) ? sanitize_text_field
                             <div class="ttbp_payment_method">
                                 <div class="ttbp_payment_tab">
                                     <input type="radio" name="ttbp_payment_method" id="payment_method_clover" class="ttbp_method_select" value="clover" />
-                                    <label for="payment_method_clover"><?php _e(get_option('ttbp_clover_pay_label', 'Credit/Debit'), 'teetime-booking-pro'); ?></label>
+                                    <label for="payment_method_clover"><?php _e(get_option('ttbp_clover_pay_label', 'Credit/Debit'), 'teetime-booking-pro'); ?>
+                                        <?php if (get_option('ttbp_adv_payment_discount') > 0): ?>
+                                            <span class="discount_checkbox">
+                                                <input type="checkbox" name="ttbp_adv_pay" id="ttbp_adv_pay" value="<?php echo get_option('ttbp_adv_payment_discount'); ?>" <?php echo $forceAdv ? 'checked' : '' ?>>
+                                                <?php echo str_replace('{discount}', get_option('ttbp_adv_payment_discount') . '%', get_option('ttbp_pia_label')); ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </label>
                                 </div>
 
                                 <!-- <div id="payment-request-button"></div> -->

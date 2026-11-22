@@ -5,6 +5,41 @@ if (!defined('ABSPATH')) exit;
 class TTBP_CPT
 {
 
+    public function register_coupons_post_type()
+    {
+        $labels = [
+            'name'               => __('Coupons', 'teetime-booking-pro'),
+            'singular_name'      => __('Coupon', 'teetime-booking-pro'),
+            'menu_name'          => __('Coupon', 'teetime-booking-pro'),
+            'name_admin_bar'     => __('Coupon', 'teetime-booking-pro'),
+            'add_new'            => __('Add New', 'teetime-booking-pro'),
+            'add_new_item'       => __('Add New Coupon', 'teetime-booking-pro'),
+            'edit_item'          => __('Edit Coupon', 'teetime-booking-pro'),
+            'new_item'           => __('New Coupon', 'teetime-booking-pro'),
+            'view_item'          => __('View Coupon', 'teetime-booking-pro'),
+            'all_items'          => __('All Coupon', 'teetime-booking-pro'),
+            'search_items'       => __('Search Coupon', 'teetime-booking-pro'),
+            'not_found'          => __('No Coupon found.', 'teetime-booking-pro'),
+            'not_found_in_trash' => __('No Coupon found in Trash.', 'teetime-booking-pro')
+        ];
+
+        $args = [
+            'labels'             => $labels,
+            'public'             => false,
+            'publicly_queryable' => false,
+            'show_ui'            => true,
+            'show_in_menu'       => false,
+            'query_var'          => true,
+            'rewrite'            => ['slug' => 'ttbp-coupon'],
+            'capability_type'    => 'post',
+            'has_archive'        => false,
+            'hierarchical'       => false,
+            'supports'           => ['title']
+        ];
+
+        register_post_type('ttbp_coupon', $args);
+    }
+
     public function register_post_type()
     {
         $labels = [

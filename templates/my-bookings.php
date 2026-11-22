@@ -6,6 +6,7 @@
                 <th><?php _e('Time', 'ttbp'); ?></th>
                 <th><?php _e('Players', 'ttbp'); ?></th>
                 <th><?php _e('Holes', 'ttbp'); ?></th>
+                <th><?php _e('Ride', 'ttbp'); ?></th>
                 <th><?php _e('Golf Course', 'ttbp'); ?></th>
                 <th><?php _e('Action', 'ttbp'); ?></th>
             </tr>
@@ -17,6 +18,7 @@
                     <td><?php echo esc_html(get_post_meta($booking->ID, 'ttbp_time', true)); ?></td>
                     <td><?php echo esc_html(get_post_meta($booking->ID, 'ttbp_players', true)); ?></td>
                     <td><?php echo esc_html(get_post_meta($booking->ID, 'ttbp_holes', true)); ?></td>
+                    <td><?php echo ucwords(esc_html(get_post_meta($booking->ID, 'ttbp_holes', true))); ?></td>
                     <td>
                         <?php
                         $terms = get_the_terms($booking->ID, 'golf_course');
