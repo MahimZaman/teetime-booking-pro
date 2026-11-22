@@ -3,7 +3,9 @@
 Plugin Name: TeeTime Booking Pro
 Description: A complete tee time booking solution with real-time availability, customer management, and payments.
 Version: 2.1
-Author: Golf Payments
+Author: Mahim Zaman
+Plugin URI: https://condixia.com
+Author URI: https://mahimzaman.com
 Text Domain: teetime-booking-pro
 Requires Plugins: woocommerce 
 */
